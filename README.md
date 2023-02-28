@@ -19,8 +19,8 @@ maven { url 'https://jitpack.io' }
 ```
 
 Next, add the librarby in your ```app/build.gradle``` file:
-```java
-implementation 'com.amanzan:Android-PickerView:4.2.0'
+```
+implementation 'com.github.amanzan:Android-PickerView:4.2.0'
 ```
 
 ### 2. Add the following code in your Activity：
