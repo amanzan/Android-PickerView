@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -317,13 +318,16 @@ public class BasePickerView {
     public void createDialog() {
         if (dialogView != null) {
             mDialog = new Dialog(context, R.style.custom_dialog2);
-            mDialog.setCancelable(mPickerOptions.cancelable);//不能点外面取消,也不能点back取消
+            mDialog.setCancelable(mPickerOptions.cancelable);
             mDialog.setContentView(dialogView);
 
             Window dialogWindow = mDialog.getWindow();
             if (dialogWindow != null) {
                 dialogWindow.setWindowAnimations(R.style.picker_view_scale_anim);
-                dialogWindow.setGravity(Gravity.CENTER);//可以改成Bottom
+                dialogWindow.setGravity(Gravity.CENTER);
+
+                // Show on top of everything
+                dialogWindow.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL);
             }
 
             mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
