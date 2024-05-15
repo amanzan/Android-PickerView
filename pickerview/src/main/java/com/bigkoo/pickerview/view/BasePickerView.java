@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -81,7 +82,11 @@ public class BasePickerView {
             //如果只是要显示在屏幕的下方
             //decorView是activity的根View,包含 contentView 和 titleView
             if (mPickerOptions.decorView == null) {
-                mPickerOptions.decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+                if (context instanceof Activity) {
+                    mPickerOptions.decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+                } else if (context instanceof ContextThemeWrapper && ((ContextThemeWrapper) context).getBaseContext() instanceof Activity) {
+                    mPickerOptions.decorView = (ViewGroup) ((Activity) ((ContextThemeWrapper) context).getBaseContext()).getWindow().getDecorView();
+                }
             }
             //将控件添加到decorView中
             rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, mPickerOptions.decorView, false);
