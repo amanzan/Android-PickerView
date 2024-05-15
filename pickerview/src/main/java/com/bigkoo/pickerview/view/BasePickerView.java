@@ -24,14 +24,13 @@ import com.bigkoo.pickerview.utils.PickerViewAnimateUtil;
 
 /**
  * Created by Sai on 15/11/22.
- * 精仿iOSPickerViewController控件
+ * Fine imitation of iOSPickerViewController control
  */
 public class BasePickerView {
-
     private Context context;
     protected ViewGroup contentContainer;
-    private ViewGroup rootView;//附加View 的 根View
-    private ViewGroup dialogView;//附加Dialog 的 根View
+    private ViewGroup rootView;
+    private ViewGroup dialogView;
 
     protected PickerOptions mPickerOptions;
     private OnDismissListener onDismissListener;
@@ -44,34 +43,30 @@ public class BasePickerView {
     protected int animGravity = Gravity.BOTTOM;
 
     private Dialog mDialog;
-    protected View clickView;//是通过哪个View弹出的
+    protected View clickView;//Which View pops up through
     private boolean isAnim = true;
 
     public BasePickerView(Context context) {
         this.context = context;
     }
 
-
     protected void initViews() {
-
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM);
 
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         if (isDialog()) {
-            //如果是对话框模式
             dialogView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, null, false);
-            //设置界面的背景为透明
             dialogView.setBackgroundColor(Color.TRANSPARENT);
-            //这个是真正要加载选择器的父布局
+            //This is the parent layout that actually loads the selector
             contentContainer = (ViewGroup) dialogView.findViewById(R.id.content_container);
-            //设置对话框 默认左右间距屏幕30
+            //Settings dialog box Default left and right spacing screen 30
             params.leftMargin = 30;
             params.rightMargin = 30;
             contentContainer.setLayoutParams(params);
-            //创建对话框
+
             createDialog();
-            //给背景设置点击事件,这样当点击内容以外的地方会关闭界面
+            //Set a click event for the background so that the interface will be closed when clicking outside the content
             dialogView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -79,22 +74,22 @@ public class BasePickerView {
                 }
             });
         } else {
-            //如果只是要显示在屏幕的下方
-            //decorView是activity的根View,包含 contentView 和 titleView
+            //If you just want to display it at the bottom of the screen
             if (mPickerOptions.decorView == null) {
                 if (context instanceof Activity) {
                     mPickerOptions.decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
                 } else if (context instanceof ContextThemeWrapper && ((ContextThemeWrapper) context).getBaseContext() instanceof Activity) {
+                    // When showing from inside an AppCompatDialog, context will be a ContextThemeWrapper
                     mPickerOptions.decorView = (ViewGroup) ((Activity) ((ContextThemeWrapper) context).getBaseContext()).getWindow().getDecorView();
                 }
             }
-            //将控件添加到decorView中
+            //Add controls to decorView
             rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, mPickerOptions.decorView, false);
             rootView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             if (mPickerOptions.outSideColor != -1) {
                 rootView.setBackgroundColor(mPickerOptions.outSideColor);
             }
-            //这个是真正要加载时间选取器的父布局
+            //This is the parent layout that actually loads the time picker
             contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
             contentContainer.setLayoutParams(params);
         }
@@ -109,10 +104,9 @@ public class BasePickerView {
     protected void initEvents() {
     }
 
-
     /**
-     * @param v      (是通过哪个View弹出的)
-     * @param isAnim 是否显示动画效果
+     * @param v      (Which View pops up through)
+     * @param isAnim Whether to display animation effects
      */
     public void show(View v, boolean isAnim) {
         this.clickView = v;
@@ -129,9 +123,8 @@ public class BasePickerView {
         show();
     }
 
-
     /**
-     * 添加View到根视图
+     * Add View to root view
      */
     public void show() {
         if (isDialog()) {
@@ -146,11 +139,10 @@ public class BasePickerView {
         }
     }
 
-
     /**
-     * show的时候调用
+     * Called during show
      *
-     * @param view 这个View
+     * @param view the view
      */
     private void onAttached(View view) {
         mPickerOptions.decorView.addView(view);
@@ -159,11 +151,10 @@ public class BasePickerView {
         }
     }
 
-
     /**
-     * 检测该View是不是已经添加到根视图
+     * Check whether the View has been added to the root view
      *
-     * @return 如果视图已经存在该View返回true
+     * @return This View returns true if the view already exists
      */
     public boolean isShowing() {
         if (isDialog()) {
@@ -171,7 +162,6 @@ public class BasePickerView {
         } else {
             return rootView.getParent() != null || isShowing;
         }
-
     }
 
     public void dismiss() {
@@ -183,11 +173,10 @@ public class BasePickerView {
             }
 
             if (isAnim) {
-                //消失动画
+                //Disappear animation
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-
                     }
 
                     @Override
@@ -197,7 +186,6 @@ public class BasePickerView {
 
                     @Override
                     public void onAnimationRepeat(Animation animation) {
-
                     }
                 });
                 contentContainer.startAnimation(outAnim);
@@ -206,16 +194,13 @@ public class BasePickerView {
             }
             dismissing = true;
         }
-
-
     }
 
     public void dismissImmediately() {
-
         mPickerOptions.decorView.post(new Runnable() {
             @Override
             public void run() {
-                //从根视图移除
+                //Remove from root view
                 mPickerOptions.decorView.removeView(rootView);
                 isShowing = false;
                 dismissing = false;
@@ -224,8 +209,6 @@ public class BasePickerView {
                 }
             }
         });
-
-
     }
 
     private Animation getInAnimation() {
@@ -244,7 +227,6 @@ public class BasePickerView {
     }
 
     public void setKeyBackCancelable(boolean isCancelable) {
-
         ViewGroup View;
         if (isDialog()) {
             View = dialogView;
@@ -273,7 +255,6 @@ public class BasePickerView {
     };
 
     protected BasePickerView setOutSideCancelable(boolean isCancelable) {
-
         if (rootView != null) {
             View view = rootView.findViewById(R.id.outmost_container);
 
@@ -288,14 +269,13 @@ public class BasePickerView {
     }
 
     /**
-     * 设置对话框模式是否可以点击外部取消
+     * Set whether the dialog mode can be canceled by clicking outside
      */
     public void setDialogOutSideCancelable() {
         if (mDialog != null) {
             mDialog.setCancelable(mPickerOptions.cancelable);
         }
     }
-
 
     /**
      * Called when the user touch on black overlay, in order to dismiss the dialog.
@@ -317,13 +297,13 @@ public class BasePickerView {
     public void createDialog() {
         if (dialogView != null) {
             mDialog = new Dialog(context, R.style.custom_dialog2);
-            mDialog.setCancelable(mPickerOptions.cancelable);//不能点外面取消,也不能点back取消
+            mDialog.setCancelable(mPickerOptions.cancelable);//You cannot click outside to cancel, nor can you click back to cancel.
             mDialog.setContentView(dialogView);
 
             Window dialogWindow = mDialog.getWindow();
             if (dialogWindow != null) {
                 dialogWindow.setWindowAnimations(R.style.picker_view_scale_anim);
-                dialogWindow.setGravity(Gravity.CENTER);//可以改成Bottom
+                dialogWindow.setGravity(Gravity.CENTER);//Can be changed to Bottom
             }
 
             mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -353,14 +333,11 @@ public class BasePickerView {
         return contentContainer;
     }
 
-
     public Dialog getDialog() {
         return mDialog;
     }
 
-
     public boolean isDialog() {
         return false;
     }
-
 }
