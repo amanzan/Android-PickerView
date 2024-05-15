@@ -134,7 +134,7 @@ public class BasePickerView {
                     contentContainer.setLayoutParams(params);
 
                     // Add the rootView to the decor view of the activity
-                    ((ViewGroup) ((Activity) context).getWindow().getDecorView()).addView(rootView);
+                    ((ViewGroup) ((Activity) ((ContextThemeWrapper) context).getBaseContext()).getWindow().getDecorView()).addView(rootView);
                 }
             }
 
