@@ -81,22 +81,63 @@ public class BasePickerView {
         } else {
             //如果只是要显示在屏幕的下方
             //decorView是activity的根View,包含 contentView 和 titleView
+//            if (mPickerOptions.decorView == null) {
+//                if (context instanceof Activity) {
+//                    mPickerOptions.decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+//
+//                    ((Activity) context).getWindow().
+//                } else if (context instanceof ContextThemeWrapper && ((ContextThemeWrapper) context).getBaseContext() instanceof Activity) {
+//                    mPickerOptions.decorView = (ViewGroup) ((Activity) ((ContextThemeWrapper) context).getBaseContext()).getWindow().getDecorView();
+//                }
+//            }
+//            //将控件添加到decorView中
+//            rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, mPickerOptions.decorView, false);
+//            rootView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            if (mPickerOptions.outSideColor != -1) {
+//                rootView.setBackgroundColor(mPickerOptions.outSideColor);
+//            }
+//            //这个是真正要加载时间选取器的父布局
+//            contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
+//            contentContainer.setLayoutParams(params);
+
             if (mPickerOptions.decorView == null) {
                 if (context instanceof Activity) {
+                    // Get the decor view of the current activity and use it as the decorView for your picker
                     mPickerOptions.decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+
+                    // Add your rootView to the decor view of the activity
+                    rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, mPickerOptions.decorView, false);
+                    rootView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    if (mPickerOptions.outSideColor != -1) {
+                        rootView.setBackgroundColor(mPickerOptions.outSideColor);
+                    }
+
+                    // Find the content container within your rootView
+                    contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
+                    contentContainer.setLayoutParams(params);
+
+                    // Add the rootView to the decor view of the activity
+                    ((ViewGroup) ((Activity) context).getWindow().getDecorView()).addView(rootView);
                 } else if (context instanceof ContextThemeWrapper && ((ContextThemeWrapper) context).getBaseContext() instanceof Activity) {
+                    // If the context is a ContextThemeWrapper, get the base context which should be the activity
                     mPickerOptions.decorView = (ViewGroup) ((Activity) ((ContextThemeWrapper) context).getBaseContext()).getWindow().getDecorView();
+
+                    // Add your rootView to the decor view of the activity
+                    rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, mPickerOptions.decorView, false);
+                    rootView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    if (mPickerOptions.outSideColor != -1) {
+                        rootView.setBackgroundColor(mPickerOptions.outSideColor);
+                    }
+
+                    // Find the content container within your rootView
+                    contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
+                    contentContainer.setLayoutParams(params);
+
+                    // Add the rootView to the decor view of the activity
+                    ((ViewGroup) ((Activity) context).getWindow().getDecorView()).addView(rootView);
                 }
             }
-            //将控件添加到decorView中
-            rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, mPickerOptions.decorView, false);
-            rootView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            if (mPickerOptions.outSideColor != -1) {
-                rootView.setBackgroundColor(mPickerOptions.outSideColor);
-            }
-            //这个是真正要加载时间选取器的父布局
-            contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
-            contentContainer.setLayoutParams(params);
+
         }
         setKeyBackCancelable(true);
     }
